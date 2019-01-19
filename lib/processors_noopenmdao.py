@@ -204,15 +204,20 @@ class findFaceGetPulse(object):
             pfreq = freqs[idx]
             self.freqs = pfreq
             self.fft = pruned
-            idx2 = np.argmax(pruned)
+            try:
+                idx2 = np.argmax(pruned)
 
-            t = (np.sin(phase[idx2]) + 1.) / 2.
-            t = 0.9 * t + 0.1
-            alpha = t
-            beta = 1 - t
+                t = (np.sin(phase[idx2]) + 1.) / 2.
+                t = 0.9 * t + 0.1
+                alpha = t
+                beta = 1 - t
 
-            self.bpm = self.freqs[idx2]
-            self.idx += 1
+                self.bpm = self.freqs[idx2]
+                self.idx += 1
+            except Exception as e:
+                alpha = 1.0
+                beta = 0.0
+                print("processors_noopenmdao :",str(e))
 
             x, y, w, h = self.get_subface_coord(0.5, 0.18, 0.25, 0.15)
             r = alpha * self.frame_in[y:y + h, x:x + w, 0]
